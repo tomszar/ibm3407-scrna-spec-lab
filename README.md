@@ -79,7 +79,8 @@ Spec-driven development runs a short loop, and the workshop maps onto it:
    to the next spec.
 
 Step-by-step student instructions for the two sessions are in
-[WORKSHOP.md](WORKSHOP.md).
+[WORKSHOP.md](WORKSHOP.md). Not sure what to build? Start from the
+[pick-a-change menu](WORKSHOP.md#menu-pick-a-change).
 
 ## Branches
 

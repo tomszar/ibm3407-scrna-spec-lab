@@ -13,20 +13,56 @@ model implements it correctly**, verified by the tests.
 
 1. **Sync.** `git pull` for the latest.
 2. **Init OpenSpec** if you haven't: `openspec init`.
-3. **Propose your change.** In opencode:
+3. **Pick a change** from the menu below (unsure? take the default).
+
+#### Menu: pick a change
+
+Choose one, or **propose your own** — this list is a floor, not a ceiling. It's
+here so nobody is blocked at the start. Items get harder going down: unsure? take
+the **default**; comfortable with Python? pick further down. Each is **one
+function with one checkable acceptance criterion** — keep your change that small,
+or the local model won't finish it in the session.
+
+1. **QC metrics and filtering** — *default.* Compute genes-per-cell and percent
+   mitochondrial counts, then filter cells on stated thresholds. Stubs exist in
+   `scrna/qc.py`. *Acceptance:* `tests/test_qc.py` passes.
+2. **Filter by cell population** — subset to microglia, or drop populations below
+   a minimum cell count. *Acceptance:* the returned object contains only the
+   intended `cell_type` groups, and no cells were added.
+3. **Marker dotplot** — plot marker genes for a cell type across the fixture's
+   `cell_type` groups. Stub exists in `scrna/plots.py`. *Acceptance:* the
+   function returns a `matplotlib` Figure with one row per marker and one column
+   per group.
+4. **Gene-level filtering** — drop genes detected in fewer than *N* cells. *(No
+   stub — write the function from scratch.)* *Acceptance:* every gene in the
+   result is detected in at least *N* cells, and no cells were removed.
+5. **QC summary table** — write cell counts before and after filtering, plus
+   per-population counts, to disk. *(No stub.)* *Acceptance:* a table file is
+   written whose numbers match the fixture.
+6. **Normalization and log-transform** — as an explicit, parameterized step.
+   *(No stub.)* *Acceptance:* after the step, each cell's total normalized counts
+   equals the chosen target sum (before the log), within tolerance.
+
+> Items 4–6 have no stubs on purpose: creating the function from nothing is a
+> stronger test of your spec than filling in a blank.
+
+Once you've picked, run the cycle:
+
+4. **Propose your change.** In opencode, e.g. for the default:
    ```
    /opsx:propose add a QC filtering step to scrna/qc.py that computes per-cell
    metrics and filters cells by minimum genes and maximum percent mitochondrial
    counts, with documented thresholds
    ```
-4. **Audit the draft** — this is the real work. Ask of the generated spec:
+5. **Audit the draft** — this is the real work. Ask of the generated spec:
    - Are the requirements **testable**? Could someone write a test from them?
    - Are the **thresholds justified** (why 200 genes? why 10% MT?), or arbitrary?
    - What is the **acceptance criterion** — how do you *know* it's done?
-   - Look at `tests/test_qc.py` for the acceptance the change must satisfy.
-5. **Revise the spec by hand.** Tighten anything vague. Pin the thresholds and
+   - Look at the acceptance for your change (e.g. `tests/test_qc.py` for the
+     default) to see what it must satisfy.
+6. **Revise the spec by hand.** Tighten anything vague. Pin the thresholds and
    say why.
-6. **Apply.** Start `/opsx:apply` and let the local model implement against your
+7. **Apply.** Start `/opsx:apply` and let the local model implement against your
    spec.
 
 ## Between sessions

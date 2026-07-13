@@ -11,6 +11,14 @@ returns clearly enough to write a spec against. Do not weaken them.
 from __future__ import annotations
 
 import anndata as ad
+import numpy as np
+import scipy.sparse as sp
+
+
+def _as_dense_counts(adata: ad.AnnData) -> np.ndarray:
+    """Return ``adata.X`` as a dense float array (the fixture is small)."""
+    x = adata.X
+    return x.toarray() if sp.issparse(x) else np.asarray(x)
 
 
 def compute_qc_metrics(adata: ad.AnnData) -> ad.AnnData:
@@ -39,10 +47,27 @@ def compute_qc_metrics(adata: ad.AnnData) -> ad.AnnData:
         ``pct_counts_mt`` columns added to ``obs``. The number of cells and
         genes is unchanged.
     """
-    raise NotImplementedError(
-        "Implement compute_qc_metrics: add n_genes, total_counts, and "
-        "pct_counts_mt (MT- prefixed genes) to adata.obs."
+    counts = _as_dense_counts(adata)
+
+    n_genes = (counts > 0).sum(axis=1)
+    total_counts = counts.sum(axis=1)
+
+    is_mt = np.array(
+        [name.upper().startswith("MT-") for name in adata.var_names]
     )
+    mt_counts = (
+        counts[:, is_mt].sum(axis=1) if is_mt.any() else np.zeros_like(total_counts)
+    )
+
+    with np.errstate(divide="ignore", invalid="ignore"):
+        pct_counts_mt = np.where(
+            total_counts > 0, 100.0 * mt_counts / total_counts, 0.0
+        )
+
+    adata.obs["n_genes"] = np.asarray(n_genes).ravel().astype(int)
+    adata.obs["total_counts"] = np.asarray(total_counts).ravel().astype(float)
+    adata.obs["pct_counts_mt"] = np.asarray(pct_counts_mt).ravel().astype(float)
+    return adata
 
 
 def filter_cells(
@@ -76,7 +101,10 @@ def filter_cells(
         may be removed but never added; genes are unchanged. The returned object
         carries the QC metric columns in ``obs``.
     """
-    raise NotImplementedError(
-        "Implement filter_cells: return a copy keeping cells with "
-        "n_genes >= min_genes and pct_counts_mt <= max_pct_mt."
+    if "n_genes" not in adata.obs or "pct_counts_mt" not in adata.obs:
+        adata = compute_qc_metrics(adata.copy())
+
+    keep = (adata.obs["n_genes"] >= min_genes) & (
+        adata.obs["pct_counts_mt"] <= max_pct_mt
     )
+    return adata[keep.to_numpy()].copy()

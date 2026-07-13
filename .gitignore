@@ -47,3 +47,25 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.pytest_cache/
+*.egg-info/
+.ipynb_checkpoints/
+
+# ---------------------------------------------------------------------------
+# Data — never commit the real SEA-AD subset or any large downloaded data.
+# The tiny synthetic fixture (data/synthetic/fixture.h5ad) IS committed and is
+# whitelisted below.
+# ---------------------------------------------------------------------------
+data/sea_ad_subset.h5ad
+data/*.h5ad
+*.h5ad
+!data/synthetic/fixture.h5ad

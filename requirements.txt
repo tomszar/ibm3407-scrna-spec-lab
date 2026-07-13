@@ -1,0 +1,15 @@
+# Core install for the workshop. Kept deliberately light so it installs on a
+# mixed-OS class of student laptops, offline-friendly once the wheels are cached.
+#
+# Requires Python >= 3.11.
+# Pinned to the versions the repo was built and verified against.
+scanpy==1.12.2
+anndata==0.13.1
+matplotlib==3.10.9
+pytest==9.1.1
+
+# NOT part of the core install. Only needed to download real SEA-AD data with
+# scripts/make_subset.py. Install it separately if you want to run against real
+# data (it pulls in a heavy dependency stack):
+#
+#   pip install cellxgene-census

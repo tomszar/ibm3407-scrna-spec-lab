@@ -48,6 +48,11 @@ or the local model won't finish it in the session.
 
 Once you've picked, run the cycle:
 
+> *Optional — explore first.* If you're unsure how to frame the change or what a
+> good acceptance criterion would be, run `/opsx:explore` before proposing. It's
+> a thinking partner for clarifying requirements, not a required step — skip it
+> when your change is already clear.
+
 4. **Propose your change.** In opencode, e.g. for the default:
    ```
    /opsx:propose add a QC filtering step to scrna/qc.py that computes per-cell
@@ -94,5 +99,6 @@ Once you've picked, run the cycle:
 
 ### The loop, in one line
 
-**propose → audit → revise → apply → verify → archive.** The spec is the
-artifact you're being graded on — the code is what a weak model produces from it.
+**_(explore) →_ propose → audit → revise → apply → verify → archive.** Explore is
+optional; the rest is the loop. The spec is the artifact you're being graded on —
+the code is what a weak model produces from it.

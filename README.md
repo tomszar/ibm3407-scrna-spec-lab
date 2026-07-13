@@ -68,6 +68,10 @@ Run the tests directly with `pytest`:
 
 Spec-driven development runs a short loop, and the workshop maps onto it:
 
+0. **Explore** *(optional)* — before committing to a spec, use `/opsx:explore` as
+   a thinking partner to clarify what you actually want and surface unknowns.
+   Skip it if your change is already clear; reach for it when you're unsure how
+   to frame the change or what a good acceptance criterion would be.
 1. **Propose** — describe the bounded change as a spec (`/opsx:propose`). For us:
    a QC filtering step with documented thresholds and a testable acceptance
    criterion.
